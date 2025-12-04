@@ -1,0 +1,177 @@
+.home-page {
+  min-height: calc(100vh - 70px);
+  background: #ffffff;
+}
+
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #e8b54a 0%, #d4a03d 100%);
+  color: #2c3e50;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin: 0 0 1rem;
+  color: #2c3e50;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin: 0 0 2rem;
+  opacity: 0.85;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.hero .btn {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.hero .btn-primary {
+  background: #2c3e50;
+  color: white;
+}
+
+.hero .btn-primary:hover {
+  background: #34495e;
+}
+
+.hero .btn-secondary {
+  background: transparent;
+  color: #2c3e50;
+  border: 2px solid #2c3e50;
+}
+
+.hero .btn-secondary:hover {
+  background: #2c3e50;
+  color: white;
+}
+
+.welcome-user {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.welcome-user strong {
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+/* Features Section */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card.admin {
+  border-color: #e8b54a;
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  margin: 0 0 0.75rem;
+  color: #1a1a2e;
+  font-size: 1.25rem;
+}
+
+.feature-card p {
+  color: #666;
+  margin: 0 0 1.5rem;
+  line-height: 1.6;
+}
+
+.feature-link {
+  color: #e8b54a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.feature-link:hover {
+  color: #d4a43a;
+}
+
+/* Info Section */
+.info-section {
+  background: #f8f9fa;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.info-section h2 {
+  margin: 0 0 3rem;
+  color: #1a1a2e;
+  font-size: 2rem;
+}
+
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.step {
+  flex: 1;
+  min-width: 200px;
+  max-width: 250px;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  background: #2c3e50;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 1rem;
+}
+
+.step h4 {
+  margin: 0 0 0.5rem;
+  color: #1a1a2e;
+}
+
+.step p {
+  color: #666;
+  margin: 0;
+  font-size: 0.95rem;
+}
