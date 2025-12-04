@@ -1,8 +1,9 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Post, Body, Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto } from './dto';
-import { Public } from './decorators';
+import { Public, CurrentUser } from './decorators';
+import { JwtAuthGuard } from './guards';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -26,5 +27,15 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get current user profile' })
+  @ApiResponse({ status: 200, description: 'User profile' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getProfile(@CurrentUser() user: { id: string; email: string; role: string }) {
+    return this.authService.getProfile(user.id);
   }
 }
