@@ -1,0 +1,55 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: library-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: library_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # NestJS Backend API
+  api:
+    build:
+      context: ./library-api
+      dockerfile: Dockerfile
+    container_name: library-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres123@postgres:5432/library_db
+      DIRECT_URL: postgresql://postgres:postgres123@postgres:5432/library_db
+      JWT_SECRET: docker-jwt-secret-change-in-production
+    ports:
+      - '3000:3000'
+    command: >
+      sh -c "npx prisma migrate deploy && node prisma/dist/seed.js 2>/dev/null || echo 'Seed skipped or already seeded' && npm run start:prod"
+
+  # React Frontend (Development)
+  frontend:
+    build:
+      context: ./library-frontend
+      dockerfile: Dockerfile
+    container_name: library-frontend
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - '5173:80'
+    environment:
+      - VITE_API_URL=http://localhost:3000/api
+
+volumes:
+  postgres_data:
