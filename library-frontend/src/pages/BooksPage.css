@@ -1,0 +1,267 @@
+.books-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: calc(100vh - 70px);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #1a1a2e;
+  font-size: 2rem;
+}
+
+/* Filter section */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.search-input,
+.filter-select {
+  padding: 0.875rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-select {
+  min-width: 150px;
+  background: white;
+  cursor: pointer;
+}
+
+.search-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: #e8b54a;
+  box-shadow: 0 0 0 3px rgba(232, 181, 74, 0.1);
+}
+
+/* Book grid */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.book-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.book-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.book-cover {
+  height: 140px;
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+
+.book-info {
+  padding: 1.5rem;
+}
+
+.book-info h3 {
+  margin: 0 0 0.5rem;
+  color: #1a1a2e;
+  font-size: 1.15rem;
+}
+
+.book-info .author {
+  color: #888;
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.book-info .isbn {
+  color: #999;
+  font-size: 0.8rem;
+  margin: 0 0 1rem;
+}
+
+.availability {
+  margin-bottom: 1.25rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: #f8f9fa;
+}
+
+.availability .available {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+.availability .unavailable {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.book-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.books-page .btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.books-page .btn-primary {
+  background: #2c3e50;
+  color: white;
+}
+
+.books-page .btn-primary:hover {
+  background: #e8b54a;
+}
+
+.btn-secondary {
+  background: #f8f9fa;
+  color: #1a1a2e;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover {
+  background: #e9ecef;
+}
+
+.btn-borrow {
+  background: #27ae60;
+  color: white;
+}
+
+.btn-borrow:hover:not(:disabled) {
+  background: #229954;
+}
+
+.btn-borrow:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.btn-edit {
+  background: #3498db;
+  color: white;
+}
+
+.btn-edit:hover {
+  background: #2980b9;
+}
+
+.btn-delete {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn-delete:hover {
+  background: #c0392b;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #888;
+  padding: 3rem;
+  font-size: 1.1rem;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal h2 {
+  margin: 0 0 1.5rem;
+  color: #1a1a2e;
+}
+
+.modal .form-group {
+  margin-bottom: 1rem;
+}
+
+.modal label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #4a4a4a;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: #e8b54a;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
