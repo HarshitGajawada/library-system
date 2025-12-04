@@ -44,22 +44,34 @@ export class BooksController {
 
   @Get()
   @Public()
-  @ApiOperation({ summary: 'Get all books with optional filters' })
+  @ApiOperation({ summary: 'Get all books with optional filters and pagination' })
   @ApiQuery({ name: 'authorId', required: false, description: 'Filter by author ID' })
   @ApiQuery({ name: 'available', required: false, description: 'Filter by availability' })
   @ApiQuery({ name: 'search', required: false, description: 'Search by title' })
-  @ApiResponse({ status: 200, description: 'List of books' })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)', type: Number })
+  @ApiQuery({ name: 'limit', required: false, description: 'Items per page (default: 10, max: 100)', type: Number })
+  @ApiResponse({ status: 200, description: 'Paginated list of books' })
   findAll(
     @Query('authorId') authorId?: string,
     @Query('available') available?: string,
     @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
   ) {
     // Manually convert available string to boolean
     let availableBool: boolean | undefined;
     if (available === 'true') availableBool = true;
     else if (available === 'false') availableBool = false;
 
-    return this.booksService.findAll({ authorId, available: availableBool, search });
+    // Parse pagination params with defaults
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? Math.min(parseInt(limit, 10), 100) : 10;
+
+    return this.booksService.findAll(
+      { authorId, available: availableBool, search },
+      pageNum > 0 ? pageNum : 1,
+      limitNum > 0 ? limitNum : 10,
+    );
   }
 
   @Get(':id')

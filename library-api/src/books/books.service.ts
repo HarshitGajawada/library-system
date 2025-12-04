@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookDto, UpdateBookDto, FilterBooksDto } from './dto';
+import { PaginatedResponseDto } from '../common/dto';
 
 @Injectable()
 export class BooksService {
@@ -45,7 +46,7 @@ export class BooksService {
     });
   }
 
-  async findAll(filters: FilterBooksDto) {
+  async findAll(filters: FilterBooksDto, page: number = 1, limit: number = 10) {
     const { authorId, available, search } = filters;
 
     const where: any = {};
@@ -67,13 +68,22 @@ export class BooksService {
       };
     }
 
-    return this.prisma.book.findMany({
-      where,
-      include: {
-        author: true,
-      },
-      orderBy: { title: 'asc' },
-    });
+    const skip = (page - 1) * limit;
+
+    const [books, total] = await Promise.all([
+      this.prisma.book.findMany({
+        where,
+        include: {
+          author: true,
+        },
+        orderBy: { title: 'asc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.book.count({ where }),
+    ]);
+
+    return new PaginatedResponseDto(books, total, page, limit);
   }
 
   async findOne(id: string) {
