@@ -209,4 +209,45 @@ export class BorrowingsService {
 
     return borrowing;
   }
+
+  async extendDueDate(borrowingId: string, days: number = 14) {
+    // Find the borrowing
+    const borrowing = await this.prisma.borrowing.findUnique({
+      where: { id: borrowingId },
+    });
+
+    if (!borrowing) {
+      throw new NotFoundException(`Borrowing with ID ${borrowingId} not found`);
+    }
+
+    // Check if already returned
+    if (borrowing.status === BorrowStatus.RETURNED) {
+      throw new BadRequestException('Cannot extend a returned borrowing');
+    }
+
+    // Extend from current due date
+    const newDueDate = new Date(borrowing.dueDate);
+    newDueDate.setDate(newDueDate.getDate() + days);
+
+    return this.prisma.borrowing.update({
+      where: { id: borrowingId },
+      data: {
+        dueDate: newDueDate,
+      },
+      include: {
+        book: {
+          include: {
+            author: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
 }

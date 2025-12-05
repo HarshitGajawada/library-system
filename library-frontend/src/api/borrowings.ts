@@ -12,6 +12,11 @@ export const borrowingsApi = {
     return response.data;
   },
 
+  extend: async (borrowingId: string): Promise<Borrowing> => {
+    const response = await apiClient.patch<Borrowing>(`/borrowings/${borrowingId}/extend`);
+    return response.data;
+  },
+
   getMyBorrowings: async (): Promise<Borrowing[]> => {
     const response = await apiClient.get<Borrowing[]>('/borrowings/my');
     return response.data;

@@ -11,6 +11,7 @@ export function AllBorrowingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
+  const [extendingId, setExtendingId] = useState<string | null>(null);
 
   const fetchBorrowings = async () => {
     try {
@@ -26,6 +27,19 @@ export function AllBorrowingsPage() {
   };
 
   useEffect(() => { fetchBorrowings(); }, []);
+
+  const handleExtend = async (id: string) => {
+    try {
+      setExtendingId(id);
+      await borrowingsApi.extend(id);
+      await fetchBorrowings();
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      alert(error.response?.data?.message || 'Failed to extend due date');
+    } finally {
+      setExtendingId(null);
+    }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -112,6 +126,7 @@ export function AllBorrowingsPage() {
                     <th>Borrowed</th>
                     <th>Due Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -143,6 +158,18 @@ export function AllBorrowingsPage() {
                           <span className="badge badge-error">Overdue</span>
                         ) : (
                           <span className="badge badge-warning">Active</span>
+                        )}
+                      </td>
+                      <td>
+                        {borrowing.status === 'BORROWED' && (
+                          <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={() => handleExtend(borrowing.id)}
+                            disabled={extendingId === borrowing.id}
+                            title="Extend due date by 14 days"
+                          >
+                            {extendingId === borrowing.id ? '...' : 'Extend'}
+                          </button>
                         )}
                       </td>
                     </tr>

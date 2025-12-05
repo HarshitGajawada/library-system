@@ -81,4 +81,17 @@ export class BorrowingsController {
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.borrowingsService.findOne(id);
   }
+
+  @Patch(':id/extend')
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Extend borrowing due date by 14 days (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Due date extended successfully' })
+  @ApiResponse({ status: 400, description: 'Cannot extend returned borrowing' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Admin access required' })
+  @ApiResponse({ status: 404, description: 'Borrowing not found' })
+  extendDueDate(@Param('id', ParseUUIDPipe) id: string) {
+    return this.borrowingsService.extendDueDate(id);
+  }
 }
