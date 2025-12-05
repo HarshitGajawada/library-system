@@ -1,8 +1,17 @@
 # Library Management System
 
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat&logo=prisma&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=swagger&logoColor=black)
+
 A full-stack library management system built with NestJS, Prisma, PostgreSQL, and React.
 
 ## Table of Contents
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
@@ -16,6 +25,36 @@ A full-stack library management system built with NestJS, Prisma, PostgreSQL, an
 - [UI Flows](#ui-flows)
 - [Design Decisions & Assumptions](#design-decisions--assumptions)
 - [Quick Start Summary](#quick-start-summary)
+
+---
+
+## Screenshots
+
+<details>
+<summary>📸 Click to view screenshots</summary>
+
+### Home Page
+![Home Page](./screenshots/home.png)
+
+### Books Page
+![Books Page](./screenshots/books.png)
+
+### Authors Page
+![Authors Page](./screenshots/authors.png)
+
+### Login Page
+![Login Page](./screenshots/login.png)
+
+### Admin: Users Management
+![Users Page](./screenshots/users.png)
+
+### Admin: All Borrowings
+![All Borrowings](./screenshots/borrowings.png)
+
+### Swagger API Documentation
+![Swagger Docs](./screenshots/swagger.png)
+
+</details>
 
 ---
 
