@@ -15,6 +15,7 @@ A full-stack library management system built with NestJS, Prisma, PostgreSQL, an
 - [Database Schema](#database-schema)
 - [UI Flows](#ui-flows)
 - [Design Decisions & Assumptions](#design-decisions--assumptions)
+- [Quick Start Summary](#quick-start-summary)
 
 ---
 
