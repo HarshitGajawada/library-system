@@ -39,11 +39,16 @@ export function BooksPage() {
   // Modal states for admin
   const [showModal, setShowModal] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
+  
+  // Borrow confirmation modal
+  const [bookToBorrow, setBookToBorrow] = useState<Book | null>(null);
+  
   const [formData, setFormData] = useState({
     title: '',
     isbn: '',
     authorId: '',
     quantity: 1,
+    availableQty: 1,
   });
 
   // Build filters object
@@ -85,11 +90,13 @@ export function BooksPage() {
     fetchBooks();
   }, [filters]);
 
-  const handleBorrow = async (bookId: string) => {
+  const confirmBorrow = async () => {
+    if (!bookToBorrow) return;
     try {
-      setBorrowingBookId(bookId);
-      await borrowingsApi.borrow(bookId);
+      setBorrowingBookId(bookToBorrow.id);
+      await borrowingsApi.borrow(bookToBorrow.id);
       await fetchBooks();
+      setBookToBorrow(null);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       alert(error.response?.data?.message || 'Failed to borrow book');
@@ -113,13 +120,24 @@ export function BooksPage() {
     e.preventDefault();
     try {
       if (editingBook) {
-        await booksApi.update(editingBook.id, formData);
+        await booksApi.update(editingBook.id, {
+          title: formData.title,
+          isbn: formData.isbn,
+          authorId: formData.authorId,
+          quantity: formData.quantity,
+          availableQty: formData.availableQty,
+        });
       } else {
-        await booksApi.create(formData);
+        await booksApi.create({
+          title: formData.title,
+          isbn: formData.isbn,
+          authorId: formData.authorId,
+          quantity: formData.quantity,
+        });
       }
       setShowModal(false);
       setEditingBook(null);
-      setFormData({ title: '', isbn: '', authorId: '', quantity: 1 });
+      setFormData({ title: '', isbn: '', authorId: '', quantity: 1, availableQty: 1 });
       await fetchBooks();
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
@@ -134,13 +152,14 @@ export function BooksPage() {
       isbn: book.isbn,
       authorId: book.authorId,
       quantity: book.quantity,
+      availableQty: book.availableQty,
     });
     setShowModal(true);
   };
 
   const openAddModal = () => {
     setEditingBook(null);
-    setFormData({ title: '', isbn: '', authorId: authors[0]?.id || '', quantity: 1 });
+    setFormData({ title: '', isbn: '', authorId: authors[0]?.id || '', quantity: 1, availableQty: 1 });
     setShowModal(true);
   };
 
@@ -209,7 +228,7 @@ export function BooksPage() {
                   {isAuthenticated && book.availableQty > 0 && (
                     <button
                       className="btn btn-borrow"
-                      onClick={() => handleBorrow(book.id)}
+                      onClick={() => setBookToBorrow(book)}
                       disabled={borrowingBookId === book.id}
                     >
                       {borrowingBookId === book.id ? 'Borrowing...' : 'Borrow'}
@@ -271,15 +290,45 @@ export function BooksPage() {
                 </select>
               </div>
               <div className="form-group">
-                <label>Quantity</label>
+                <label>Total Copies</label>
                 <input
                   type="number"
                   min="1"
                   value={formData.quantity}
-                  onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) })}
+                  onChange={(e) => {
+                    const newQuantity = parseInt(e.target.value) || 1;
+                    setFormData({ 
+                      ...formData, 
+                      quantity: newQuantity,
+                      availableQty: editingBook 
+                        ? Math.min(formData.availableQty, newQuantity) 
+                        : newQuantity
+                    });
+                  }}
                   required
                 />
+                {editingBook && (
+                  <small className="form-hint">
+                    Reduce for lost books.
+                  </small>
+                )}
               </div>
+              {editingBook && (
+                <div className="form-group">
+                  <label>Available Copies</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max={formData.quantity}
+                    value={formData.availableQty}
+                    onChange={(e) => setFormData({ 
+                      ...formData, 
+                      availableQty: Math.min(parseInt(e.target.value) || 0, formData.quantity)
+                    })}
+                    required
+                  />
+                </div>
+              )}
               <div className="modal-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                   Cancel
@@ -289,6 +338,30 @@ export function BooksPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {bookToBorrow && (
+        <div className="modal-overlay" onClick={() => setBookToBorrow(null)}>
+          <div className="modal modal-confirm" onClick={(e) => e.stopPropagation()}>
+            <h2>Confirm Borrow</h2>
+            <p>Are you sure you want to borrow <strong>{bookToBorrow.title}</strong>?</p>
+            <p className="due-date-info">
+              📅 Due date: <strong>{new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString()}</strong> (14 days)
+            </p>
+            <div className="modal-actions">
+              <button className="btn btn-secondary" onClick={() => setBookToBorrow(null)}>
+                Cancel
+              </button>
+              <button 
+                className="btn btn-primary" 
+                onClick={confirmBorrow}
+                disabled={borrowingBookId === bookToBorrow.id}
+              >
+                {borrowingBookId === bookToBorrow.id ? 'Borrowing...' : 'Confirm'}
+              </button>
+            </div>
           </div>
         </div>
       )}
