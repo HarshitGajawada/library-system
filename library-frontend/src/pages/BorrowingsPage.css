@@ -1,0 +1,129 @@
+.borrowings-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  margin: 0 0 0.5rem;
+  color: #1a1a2e;
+}
+
+.empty-state p {
+  color: #666;
+  margin: 0;
+}
+
+.book-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.book-info .book-title {
+  font-weight: 500;
+  color: #1a1a2e;
+}
+
+.book-info .book-author {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* Borrowing Stats */
+.borrowing-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  min-width: 100px;
+}
+
+.stat-item:hover {
+  border-color: #e8b54a;
+}
+
+.stat-item.active {
+  border-color: #2c3e50;
+  background: #f8f9fa;
+}
+
+.stat-item .stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.stat-item .stat-value.warning {
+  color: #e74c3c;
+}
+
+.stat-item .stat-label {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* User cell */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e8b54a 0%, #d4a43a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2c3e50;
+  flex-shrink: 0;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-details .user-name {
+  font-weight: 500;
+  color: #1a1a2e;
+}
+
+.user-details .user-email {
+  font-size: 0.75rem;
+  color: #888;
+}
