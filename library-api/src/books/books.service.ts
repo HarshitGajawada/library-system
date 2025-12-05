@@ -143,22 +143,42 @@ export class BooksService {
       }
     }
 
-    // If quantity is being updated, adjust availableQty proportionally
-    let availableQtyAdjustment = 0;
-    if (updateBookDto.quantity !== undefined) {
+    // Calculate the final values
+    const newQuantity = updateBookDto.quantity ?? existingBook.quantity;
+    let newAvailableQty: number;
+
+    if (updateBookDto.availableQty !== undefined) {
+      // Admin explicitly set availableQty (e.g., for lost books)
+      newAvailableQty = updateBookDto.availableQty;
+    } else if (updateBookDto.quantity !== undefined) {
+      // Only quantity changed, adjust availableQty proportionally
       const quantityDiff = updateBookDto.quantity - existingBook.quantity;
-      availableQtyAdjustment = quantityDiff;
+      newAvailableQty = existingBook.availableQty + quantityDiff;
+    } else {
+      // Neither changed
+      newAvailableQty = existingBook.availableQty;
+    }
+
+    // Validate: availableQty cannot exceed quantity
+    if (newAvailableQty > newQuantity) {
+      throw new ConflictException(
+        `Available quantity (${newAvailableQty}) cannot exceed total quantity (${newQuantity})`,
+      );
+    }
+
+    // Validate: availableQty cannot be negative
+    if (newAvailableQty < 0) {
+      throw new ConflictException('Available quantity cannot be negative');
     }
 
     return this.prisma.book.update({
       where: { id },
       data: {
-        ...updateBookDto,
-        ...(availableQtyAdjustment !== 0 && {
-          availableQty: {
-            increment: availableQtyAdjustment,
-          },
-        }),
+        title: updateBookDto.title,
+        isbn: updateBookDto.isbn,
+        authorId: updateBookDto.authorId,
+        quantity: newQuantity,
+        availableQty: newAvailableQty,
       },
       include: {
         author: true,

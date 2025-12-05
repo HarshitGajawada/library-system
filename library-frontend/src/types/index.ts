@@ -87,6 +87,7 @@ export interface UpdateBookData {
   isbn?: string;
   authorId?: string;
   quantity?: number;
+  availableQty?: number;
 }
 
 export interface CreateAuthorData {
