@@ -29,3 +29,7 @@ coverage/
 
 # Prisma
 prisma/migrations/**/migration_lock.toml
+DEMO_SCRIPT.md
+
+# Demo script (local only)
+DEMO_SCRIPT.md
