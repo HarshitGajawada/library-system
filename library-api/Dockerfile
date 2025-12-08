@@ -45,8 +45,12 @@ RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" \
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma/dist ./prisma/dist
 
+# Copy entrypoint script
+COPY docker-entrypoint.sh /app/
+RUN chmod +x /app/docker-entrypoint.sh
+
 # Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["node", "dist/main"]
+# Use entrypoint
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
