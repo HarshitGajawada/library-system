@@ -36,10 +36,9 @@ COPY prisma ./prisma/
 # Install only production dependencies
 RUN npm ci --only=production
 
-# Generate Prisma client
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" \
-    DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy" \
-    npx prisma generate
+# Copy generated Prisma client from builder (skip regeneration)
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # Copy built application from builder
 COPY --from=builder /app/dist ./dist
