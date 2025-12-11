@@ -9,6 +9,7 @@ import {
   UseGuards,
   Query,
   ParseUUIDPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,6 +18,7 @@ import {
   ApiBearerAuth,
   ApiQuery,
 } from '@nestjs/swagger';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { Role } from '@prisma/client';
 import { BooksService } from './books.service';
 import { CreateBookDto, UpdateBookDto, FilterBooksDto } from './dto';
@@ -44,6 +46,8 @@ export class BooksController {
 
   @Get()
   @Public()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(300)
   @ApiOperation({ summary: 'Get all books with optional filters and pagination' })
   @ApiQuery({ name: 'authorId', required: false, description: 'Filter by author ID' })
   @ApiQuery({ name: 'available', required: false, description: 'Filter by availability' })
@@ -76,6 +80,8 @@ export class BooksController {
 
   @Get(':id')
   @Public()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(300)
   @ApiOperation({ summary: 'Get a book by ID' })
   @ApiResponse({ status: 200, description: 'Book details with author and active borrowings' })
   @ApiResponse({ status: 404, description: 'Book not found' })

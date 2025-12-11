@@ -2,14 +2,20 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  Inject,
 } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookDto, UpdateBookDto, FilterBooksDto } from './dto';
 import { PaginatedResponseDto } from '../common/dto';
 
 @Injectable()
 export class BooksService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   async create(createBookDto: CreateBookDto) {
     const { title, isbn, authorId, quantity } = createBookDto;
@@ -32,7 +38,7 @@ export class BooksService {
       throw new NotFoundException(`Author with ID ${authorId} not found`);
     }
 
-    return this.prisma.book.create({
+    const book = await this.prisma.book.create({
       data: {
         title,
         isbn,
@@ -44,6 +50,8 @@ export class BooksService {
         author: true,
       },
     });
+
+    return book;
   }
 
   async findAll(filters: FilterBooksDto, page: number = 1, limit: number = 10) {
@@ -171,7 +179,7 @@ export class BooksService {
       throw new ConflictException('Available quantity cannot be negative');
     }
 
-    return this.prisma.book.update({
+    const updatedBook = await this.prisma.book.update({
       where: { id },
       data: {
         title: updateBookDto.title,
@@ -184,14 +192,32 @@ export class BooksService {
         author: true,
       },
     });
+
+    return updatedBook;
   }
 
   async remove(id: string) {
     // Check if book exists
-    await this.findOne(id);
+    const book = await this.findOne(id);
 
-    return this.prisma.book.delete({
+    // Check for active borrowings
+    const activeBorrowings = await this.prisma.borrowing.count({
+      where: {
+        bookId: id,
+        status: 'BORROWED',
+      },
+    });
+
+    if (activeBorrowings > 0) {
+      throw new ConflictException(
+        `Cannot delete book. There are ${activeBorrowings} active borrowing(s). Please wait for all copies to be returned.`,
+      );
+    }
+
+    const deletedBook = await this.prisma.book.delete({
       where: { id },
     });
+
+    return deletedBook;
   }
 }
